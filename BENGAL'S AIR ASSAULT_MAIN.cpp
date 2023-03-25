@@ -52,7 +52,7 @@ int main()
 	rectangle.setFillColor(sf::Color::Red);
 	rectangle.setOutlineColor(sf::Color::White);
 
-
+	//NEW OPTION CREATE
 
 
 
