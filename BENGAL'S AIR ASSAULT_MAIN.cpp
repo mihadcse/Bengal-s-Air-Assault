@@ -41,6 +41,13 @@ int main()
 
 
 	//KILO FLIGHT BACKGROUND
+	sf::Texture kiloflightbackground;
+	if (!kiloflightbackground.loadFromFile("Image/b51.jpg"))
+	{
+		std::cout << "kiloflight background error\n";
+	}
+	sf::Sprite kiloflightbackgroundsprite(kiloflightbackground);
+
 
 	//CREDITS BACKGROUND
 	sf::Texture creditbackground;
@@ -255,7 +262,7 @@ int main()
 				}
 
 				//BACK CLICKED
-				else if ((clicked == 2 || clicked==3 || clicked==4) && rectangle6.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+				else if ((clicked == 1 || clicked == 2 || clicked==3 || clicked==4) && rectangle6.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
 				{
 					std::cout << "back clicked!!\n";
 					clicked = 0;
@@ -345,6 +352,7 @@ int main()
 			{
 				window.draw(newbackgroundsprite);
 				window.draw(charactersprite);
+				window.draw(rectangle6);
 			}
 
 			else if (clicked == 2)
@@ -361,6 +369,7 @@ int main()
 
 			else if (clicked == 4)
 			{
+				window.draw(kiloflightbackgroundsprite);
 				window.draw(rectangle6);
 			}
 
