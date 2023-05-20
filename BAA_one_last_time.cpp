@@ -12,12 +12,16 @@ using namespace std;
 vector<pair <double, double> >char_fire, enemy_fire;
 float enemyShotTimer = 0.0f;
 float enemyShotDelay = 2.0f;
-int max_ammo=2, ammo=2;
+int max_ammo = 5, ammo = 5;
 int enemyspawnTimer = 0;
+int maxCharHealth = 200;
+int enemyHeathFull = 50;
+int enemyMainHeathFull = 500;
 
 void reload() {
 	ammo = max_ammo;
 }
+
 int main()
 {
 	srand(time(NULL));
@@ -67,7 +71,91 @@ int main()
 	//		sf::sleep(sf::seconds(0.5));
 	//	}
 	//}
+	
+	class Character {
+	public:
+		int health;
+		// add more properties as needed
 
+		Character() {
+			health = 200;
+			// add more initialization as needed
+		}
+
+		void takeDamage(int damage) {
+			health -= damage;
+			if (health < 0) {
+				health = 0;
+			}
+		}
+	};
+
+	class Enemy {
+	public:
+		int health;
+
+		Enemy() {
+			health = enemyHeathFull; // Set initial health to 100
+		}
+
+		void takeDamage(int damage) {
+			health -= damage;
+			if (health < 0) {
+				health = 0;
+			}
+		}
+	};
+
+	class Enemy_main {
+	public:
+		int health;
+
+		Enemy_main() {
+			health = enemyMainHeathFull; // Set initial health to 100
+		}
+
+		void takeDamage(int damage) {
+			health -= damage;
+			if (health < 0) {
+				health = 0;
+			}
+		}
+	};
+	//?
+	class EnemyAircraft : public sf::Sprite {
+	public:
+		EnemyAircraft(sf::Texture& texture, float x, float y, float vx, float vy)
+			: sf::Sprite(texture), m_position(x, y), m_velocity(vx, vy)
+		{
+			// Set the sprite's initial position and scale
+			setPosition(100, 50);
+			setScale(0.5f, 0.5f); 
+		}
+
+		void update(float dt)
+		{
+			// Update the position based on the velocity and delta time
+			m_position += m_velocity * dt;
+			setPosition(m_position);
+		}
+
+		// Accessors for the position and velocity
+		sf::Vector2f getPosition() const { return m_position; }
+		sf::Vector2f getVelocity() const { return m_velocity; }
+
+	private:
+		sf::Vector2f m_position;
+		sf::Vector2f m_velocity;
+	};
+
+	Character player;
+	Enemy enemy;
+	Enemy_main enemy_main;
+
+
+
+	//.......................................................................................................................................
+	
 	//NEW GAME BACKGROUND
 	sf::Texture newbackground;
 	if (!newbackground.loadFromFile("Image/mainbg.jpg"))
@@ -129,9 +217,7 @@ int main()
 	}
 	sf::Sound backsound;
 	backsound.setBuffer(backsoundbuffer);
-	backsound.play();
-
-
+	//backsound.play();
 
 	//NEW GAME OPTION CREATE
 	sf::RectangleShape rectangle1(sf::Vector2f(195, 50));
@@ -221,11 +307,11 @@ int main()
 
 	//MUSIC ON/OFF OPTION
 
-	
+
 
 	//CHARACTER CREATE
 	sf::Texture charactertexture;
-	if (!charactertexture.loadFromFile("Image/sprite_jet.png"))
+	if (!charactertexture.loadFromFile("Image/charSprite.png"))
 	{
 		cout << "character error!!\n";
 	}
@@ -239,7 +325,7 @@ int main()
 		cout << "char_fire error!!\n";
 	}
 	sf::Sprite char_firesprite(char_firetexture);
-	vector<sf::Sprite>char_fires;
+	vector<sf::Sprite>charFireSpriteVect;
 
 
 	//enemy_fire CREATE
@@ -249,7 +335,9 @@ int main()
 		cout << "enemy_fire error!!\n";
 	}
 	sf::Sprite enemy_firesprite(enemy_firetexture);
-	
+	sf::RectangleShape enemyFireBox(sf::Vector2f(20, 20));
+	enemyFireBox.setFillColor(sf::Color::Red);
+
 
 	//char_fire SOUND
 	sf::SoundBuffer char_firesoundbuffer;
@@ -268,9 +356,13 @@ int main()
 		cout << "enemy1 error!!\n";
 	}
 	sf::Sprite enemy1sprite(enemy1texture);
+	sf::FloatRect enemyBound = enemy1sprite.getGlobalBounds();
+	
 	//enemy1sprite.setPosition(sf::Vector2f(200, 50));
 	vector<sf::Sprite>enemies;
+	enemies.push_back(enemy1sprite);
 
+	//enemy_main
 	sf::Texture enemy2texture;
 	if (!enemy2texture.loadFromFile("Image/enemy2.png"))
 	{
@@ -278,8 +370,8 @@ int main()
 	}
 	sf::Sprite enemy2sprite(enemy2texture);
 	enemy2sprite.setPosition(sf::Vector2f(0, 10.f));
-	
 
+	//enemy_main destroyed
 	sf::Texture enemy3texture;
 	if (!enemy3texture.loadFromFile("Image/enemy2(destroyed).png"))
 	{
@@ -304,13 +396,22 @@ int main()
 	sf::Sprite oilsprite(oiltexture);
 	oilsprite.setPosition(sf::Vector2f(280, 0));
 
+	//Collision
+	sf::FloatRect nextPosition;
+	sf::RectangleShape nextBox;
 
-	//Health-bar creation
-	sf::RectangleShape healthBar(sf::Vector2f(100, 10));
-	healthBar.setFillColor(sf::Color::Black);
-	healthBar.setPosition(enemy2sprite.getPosition().x, enemy2sprite.getPosition().y - 20);
 
-	//healthBar.setSize(sf::Vector2f(enemy2sprite.health, 10));
+
+	//Player HealthBar Making
+	sf::Vector2f healthBarSize(100, 10);
+	//back
+	sf::RectangleShape charHealthBarBack(sf::Vector2f(healthBarSize.x, healthBarSize.y));
+	charHealthBarBack.setFillColor(sf::Color::Red);
+	charHealthBarBack.setPosition(charactersprite.getPosition().x + 25, charactersprite.getPosition().y - 15);
+	//front
+	sf::RectangleShape charHealthBarFront(sf::Vector2f((float) player.health / maxCharHealth * healthBarSize.x, healthBarSize.y));
+	charHealthBarFront.setFillColor(sf::Color::Black);
+	charHealthBarFront.setPosition(charactersprite.getPosition().x + 25, charactersprite.getPosition().y - 15);
 
 
 	//Explosion Sound
@@ -320,7 +421,7 @@ int main()
 	}
 	sf::Sound explosionsound;
 	explosionsound.setBuffer(explosionBuffer);
-	
+
 
 	//missile reload Sound
 	sf::SoundBuffer reloadsoundbuffer;
@@ -330,7 +431,7 @@ int main()
 	}
 	sf::Sound reloadsound;
 	reloadsound.setBuffer(reloadsoundbuffer);
-	
+
 
 	//MOUSE CURSOR APPEARANCE
 	sf::Image cursorImage;
@@ -347,54 +448,7 @@ int main()
 	sf::Clock clock;
 	float fireInterval = 2.0f;
 
-
-	class Enemy {
-	public:
-		int health;
-
-		Enemy() {
-			health = 100; // Set initial health to 100
-		}
-
-		void takeDamage(int damage) {
-			health -= damage;
-			if (health < 0) {
-				health = 0;
-			}
-		}
-	};
-
-	//........................................................................
-	class EnemyAircraft : public sf::Sprite {
-	public:
-		EnemyAircraft(sf::Texture& texture, float x, float y, float vx, float vy)
-			: sf::Sprite(texture), m_position(x, y), m_velocity(vx, vy)
-		{
-			// Set the sprite's initial position and scale
-			setPosition(10, 50);
-			setScale(0.5f, 0.5f);
-		}
-
-		void update(float dt)
-		{
-			// Update the position based on the velocity and delta time
-			m_position += m_velocity * dt;
-			setPosition(m_position);
-		}
-
-		// Accessors for the position and velocity
-		sf::Vector2f getPosition() const { return m_position; }
-		sf::Vector2f getVelocity() const { return m_velocity; }
-
-	private:
-		sf::Vector2f m_position;
-		sf::Vector2f m_velocity;
-	};
-
-
-
-
-
+	//.....................................................................................................................................
 
 	while (window.isOpen())
 	{
@@ -532,26 +586,44 @@ int main()
 					clicked = 0;
 					continue;
 				}
-				
-				
+				// draw player and enemy health bars
+				sf::RectangleShape playerHealthBar(sf::Vector2f(player.health, 20));
+				playerHealthBar.setFillColor(sf::Color::Green);
+				window.draw(playerHealthBar);
+
+				sf::RectangleShape enemyHealthBar(sf::Vector2f(enemy.health, 20));
+				enemyHealthBar.setFillColor(sf::Color::Red);
+				window.draw(enemyHealthBar);
+
+				/*if (char_firesprite.getGlobalBounds().intersects(enemy1sprite.getGlobalBounds())) {
+					enemy.takeDamage(50);
+				}
+				if (char_firesprite.getGlobalBounds().intersects(enemy2sprite.getGlobalBounds())) {
+					enemy_main.takeDamage(50);
+				}
+				if (enemy_firesprite.getGlobalBounds().intersects(charactersprite.getGlobalBounds())) {
+					player.takeDamage(40);
+				}
+				if (enemy1sprite.getGlobalBounds().intersects(charactersprite.getGlobalBounds())) {
+					player.takeDamage(20);
+					enemy.takeDamage(50);
+				}*/
 				//Char_firing
-				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space && ammo>0)
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space && ammo > 0)
 				{
 					char_firesound.play();
 					ammo--;
 					char_fire.push_back(make_pair(charactersprite.getPosition().x, charactersprite.getPosition().y));
-					
+					charFireSpriteVect.push_back(char_firesprite);
 				}
 				//Ammo reloading
 				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::RShift) {
 					reload();
 					reloadsound.play();
 				}
-
+				
 			}
 		}
-
-
 
 		//LEFT MOVEMENT
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
@@ -559,33 +631,41 @@ int main()
 			if (charactersprite.getPosition().x >= -20)
 			{
 				charactersprite.move(sf::Vector2f(-1, 0));
+				charHealthBarBack.move(sf::Vector2f(-1, 0));
+				charHealthBarFront.move(sf::Vector2f(-1, 0));
 			}
 		}
-
 		//RIGHT MOVEMENT
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 		{
 			if (charactersprite.getPosition().x <= 1000)
 			{
 				charactersprite.move(sf::Vector2f(1, 0));
+				charHealthBarBack.move(sf::Vector2f(1, 0));
+				charHealthBarFront.move(sf::Vector2f(1, 0));
+
 			}
 		}
-
 		//UP MOVEMENT
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 		{
 			if (charactersprite.getPosition().y >= 450)
 			{
 				charactersprite.move(sf::Vector2f(0, -1));
+				charHealthBarBack.move(sf::Vector2f(0, -1));
+				charHealthBarFront.move(sf::Vector2f(0, -1));
+
 			}
 		}
-
 		//DOWN MOVEMENT
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 		{
 			if (charactersprite.getPosition().y <= 570)
 			{
 				charactersprite.move(sf::Vector2f(0, 1));
+				charHealthBarBack.move(sf::Vector2f(0, 1));
+				charHealthBarFront.move(sf::Vector2f(0, 1));
+
 			}
 		}
 
@@ -645,46 +725,40 @@ int main()
 				timeSinceLastFire = 0.f;
 			}
 			//enemy spawn 
-			if (enemyspawnTimer < 2) {
+			if (enemyspawnTimer < 500) {
 				enemyspawnTimer++;
 			}
 			else {
 				//Generating random x, y positions
 				float xp = rand() % window.getSize().x;
 				float yp = rand() % window.getSize().y;
-				enemy1sprite.setPosition(xp, 180);
+				enemy1sprite.setPosition(xp, 120);
 				enemies.push_back(sf::Sprite(enemy1sprite));
 				enemyspawnTimer = 0;
 			}
 			for (size_t i = 0; i < enemies.size(); i++) {
 				enemies[i].move(0.f, .1f);
-
-				if (enemies[i].getPosition().y > window.getSize().y - 300)
+				if (enemies[i].getPosition().y > window.getSize().y)
 					enemies.erase(enemies.begin() + i);
 			}
 			//missile enemy collision
-			for (size_t i = 0; i < char_fires.size(); i++) {
-				for (size_t k = 0; k < enemies.size(); k++) {
-					if (char_fires[i].getGlobalBounds().intersects(enemies[k].getGlobalBounds())) {
-						char_fires.erase(char_fires.begin() + i);
-						enemies.erase(enemies.begin() + k);
-						break;
-					}
+			
+			//enemy_black character collision
+			for (size_t i = 0; i < enemies.size(); i++) {
+				if (enemies[i].getGlobalBounds().intersects(charactersprite.getGlobalBounds())) {
+					enemies.erase(enemies.begin() + i);
 				}
 			}
 			window.draw(newbackgroundsprite);
 			window.draw(charactersprite);
-			//window.draw(enemy1sprite);
+			window.draw(charHealthBarBack);
+			window.draw(charHealthBarFront);
 			window.draw(enemy2sprite);
-			//window.draw(enemy3sprite);
-			//window.draw(fuelsprite);
-			//window.draw(oilsprite);
+
 			for (size_t i = 0; i < enemies.size(); i++) {
 				window.draw(enemies[i]);
 			}
-			for (size_t i = 0; i < char_fires.size(); i++) {
-				window.draw(char_fires[i]);
-			}
+			
 		}
 		else if (clicked == 0)
 		{
@@ -725,7 +799,7 @@ int main()
 			window.close();
 		}
 
-		//Char firing
+		//Char firing //char_fire is taking (x, y) positions of bullet
 		if (!char_fire.empty())
 		{
 			for (int i = 0; i < char_fire.size(); i++)
@@ -737,10 +811,20 @@ int main()
 				{
 					continue;
 				}
-				char_firesprite.setPosition(sf::Vector2f(char_fire[i].first + 30, char_fire[i].second + 5));
-				char_firesprite.move(sf::Vector2f(0, -2));
-				window.draw(char_firesprite);
+				charFireSpriteVect[i].setPosition(sf::Vector2f(char_fire[i].first + 30, char_fire[i].second + 5));
+				charFireSpriteVect[i].move(sf::Vector2f(0, -2));
+				for (size_t k = 0; k < enemies.size(); k++) {
+					if (charFireSpriteVect[i].getGlobalBounds().intersects(enemies[k].getGlobalBounds())) {
+						charFireSpriteVect.erase(charFireSpriteVect.begin()+i);
+					}
+				}
+				//window.draw(charFireSpriteVect[i]);
+				/*if (charFireSpriteVect[i].getPosition().y > window.getSize().y)
+						enemies.erase(enemies.begin() + i);*/
 			}
+		}
+		for (size_t i = 0; i < charFireSpriteVect.size(); i++) {
+			window.draw(charFireSpriteVect[i]);
 		}
 		//Enemy firing
 		if (!enemy_fire.empty())
@@ -754,14 +838,19 @@ int main()
 				{
 					continue;
 				}
-				enemy_firesprite.setPosition(sf::Vector2f(enemy_fire[j].first +45, enemy_fire[j].second +15));
+				if (enemyFireBox.getGlobalBounds().intersects(charHealthBarBack.getGlobalBounds())){
+					player.health -= 40;
+					window.draw(rectangle6);
+				}
+				enemy_firesprite.setPosition(sf::Vector2f(enemy_fire[j].first + 45, enemy_fire[j].second + 15));
 				enemy_firesprite.move(sf::Vector2f(0, -2));
 				window.draw(enemy_firesprite);
+
 			}
 		}
+		
 		
 		window.display();
 	}
 
 }
-
