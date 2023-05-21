@@ -6,19 +6,36 @@
 #include<SFML/Window.hpp>
 #include<SFML/Network.hpp>
 #include<SFML/Config.hpp>
+#include<cstdlib>
+#include<fstream>
 using namespace std;
 
-vector<pair <double, double> >fire;
+vector<pair <double, double> >char_fire, enemy_fire;
+float enemyShotTimer = 0.0f;
+float enemyShotDelay = 2.0f;
 
+int enemyspawnTimer = 0;
+int maxCharHealth = 200;
+int enemyHeathFull = 50;
+int enemyMainHeathFull = 500;
+int point = 0;
+
+//void reload() {
+//	ammo = max_ammo;
+//}
 
 int main()
 {
+	int max_ammo = 10, ammo = 10;
+	srand(time(NULL));
 	int direction = 0;
-	int clicked = -1, quit_anim=0;
+	int clicked = -1, quit_anim = 0;
+
 	//WINDOW CREATE AND BACKGROUND
 	sf::RenderWindow window(sf::VideoMode(1150, 680), "Bengal's air assault");// this window ratio is fixed. It will show the window with a height of 1150 and width of 680
+	window.setFramerateLimit(500);
 	sf::Texture backgroundtexture1;
-	if (!backgroundtexture1.loadFromFile("Image/sample.jpg"))
+	if (!backgroundtexture1.loadFromFile("Image/Mback1.jpg"))
 	{
 		cout << "background 1 error!!!!\n";
 	}
@@ -26,15 +43,16 @@ int main()
 
 	//VIDEO MAKING
 	// Create an array of image file names
-	/*std::string imageFileNames[] = { "Video/2_001.jpg", "Video/2_002.jpg", "Video/2_003.jpg", "Video/2_004.jpg", "Video/2_005.jpg", "Video/2_006.jpg", "Video/2_007.jpg", "Video/2_008.jpg", "Video/2_009.jpg", "Video/2_010.jpg", "Video/2_011.jpg", "Video/2_012.jpg", "Video/2_013.jpg", "Video/2_014.jpg", "Video/2_015.jpg", "Video/2_016.jpg", "Video/2_017.jpg", "Video/2_018.jpg", "Video/2_019.jpg", "Video/2_020.jpg", "Video/2_021.jpg", "Video/2_022.jpg", "Video/2_023.jpg", 
-		"Video/2_024.jpg", "Video/2_025.jpg", "Video/2_026.jpg", "Video/2_027.jpg", "Video/2_028.jpg", "Video/2_029.jpg", "Video/2_030.jpg", "Video/2_031.jpg", "Video/2_032.jpg", "Video/2_033.jpg", "Video/2_034.jpg", "Video/2_035.jpg", "Video/2_036.jpg", "Video/2_037.jpg", "Video/2_038.jpg", "Video/2_039.jpg", "Video/2_040.jpg", "Video/2_041.jpg", "Video/2_055.jpg", "Video/2_056.jpg", "Video/2_057.jpg", "Video/2_058.jpg", "Video/2_059.jpg", "Video/2_060.jpg", "Video/2_061.jpg", 
-		"Video/2_062.jpg", "Video/2_063.jpg", "Video/2_064.jpg", "Video/2_065.jpg", "Video/2_066.jpg", "Video/2_067.jpg", "Video/2_068.jpg", "Video/2_069.jpg", "Video/2_070.jpg", "Video/2_071.jpg", "Video/2_072.jpg", "Video/2_073.jpg", "Video/2_074.jpg", "Video/2_075.jpg", "Video/2_076.jpg", "Video/2_077.jpg", "Video/2_078.jpg", "Video/2_079.jpg", "Video/2_080.jpg", "Video/2_081.jpg", "Video/2_082.jpg", "Video/2_083.jpg", "Video/2_084.jpg", "Video/2_085.jpg", "Video/2_086.jpg", 
-		"Video/2_087.jpg", "Video/2_088.jpg", "Video/2_089.jpg", "Video/2_090.jpg", "Video/2_091.jpg", "Video/2_092.jpg", "Video/2_093.jpg","Video/2_094.jpg", "Video/2_095.jpg", "Video/2_096.jpg", "Video/2_097.jpg", "Video/2_098.jpg", "Video/2_099.jpg", "Video/2_100.jpg", "Video/2_101.jpg", "Video/2_102.jpg", "Video/2_103.jpg", "Video/2_104.jpg", "Video/2_105.jpg", "Video/2_106.jpg", "Video/2_107.jpg", "Video/2_108.jpg", "Video/2_109.jpg", "Video/2_110.jpg", "Video/2_111.jpg", 
-		"Video/2_112.jpg", "Video/2_113.jpg", "Video/2_114.jpg", "Video/2_115.jpg", "Video/2_116.jpg", "Video/2_117.jpg", "Video/2_118.jpg", "Video/2_119.jpg", "Video/2_120.jpg", "Video/2_121.jpg", "Video/2_122.jpg", "Video/2_123.jpg", "Video/2_124.jpg", "Video/2_125.jpg", "Video/2_126.jpg", "Video/2_127.jpg", "Video/2_128.jpg", "Video/2_129.jpg", "Video/2_130.jpg", "Video/2_131.jpg", "Video/2_132.jpg", "Video/2_133.jpg", "Video/2_134.jpg","Video/2_135.jpg", "Video/2_136.jpg", 
+	/*std::string imageFileNames[] = { "Video/2_001.jpg", "Video/2_002.jpg", "Video/2_003.jpg", "Video/2_004.jpg", "Video/2_005.jpg", "Video/2_006.jpg", "Video/2_007.jpg", "Video/2_008.jpg", "Video/2_009.jpg", "Video/2_010.jpg", "Video/2_011.jpg", "Video/2_012.jpg", "Video/2_013.jpg", "Video/2_014.jpg", "Video/2_015.jpg", "Video/2_016.jpg", "Video/2_017.jpg", "Video/2_018.jpg", "Video/2_019.jpg", "Video/2_020.jpg", "Video/2_021.jpg", "Video/2_022.jpg", "Video/2_023.jpg",
+		"Video/2_024.jpg", "Video/2_025.jpg", "Video/2_026.jpg", "Video/2_027.jpg", "Video/2_028.jpg", "Video/2_029.jpg", "Video/2_030.jpg", "Video/2_031.jpg", "Video/2_032.jpg", "Video/2_033.jpg", "Video/2_034.jpg", "Video/2_035.jpg", "Video/2_036.jpg", "Video/2_037.jpg", "Video/2_038.jpg", "Video/2_039.jpg", "Video/2_040.jpg", "Video/2_041.jpg", "Video/2_055.jpg", "Video/2_056.jpg", "Video/2_057.jpg", "Video/2_058.jpg", "Video/2_059.jpg", "Video/2_060.jpg", "Video/2_061.jpg",
+		"Video/2_062.jpg", "Video/2_063.jpg", "Video/2_064.jpg", "Video/2_065.jpg", "Video/2_066.jpg", "Video/2_067.jpg", "Video/2_068.jpg", "Video/2_069.jpg", "Video/2_070.jpg", "Video/2_071.jpg", "Video/2_072.jpg", "Video/2_073.jpg", "Video/2_074.jpg", "Video/2_075.jpg", "Video/2_076.jpg", "Video/2_077.jpg", "Video/2_078.jpg", "Video/2_079.jpg", "Video/2_080.jpg", "Video/2_081.jpg", "Video/2_082.jpg", "Video/2_083.jpg", "Video/2_084.jpg", "Video/2_085.jpg", "Video/2_086.jpg",
+		"Video/2_087.jpg", "Video/2_088.jpg", "Video/2_089.jpg", "Video/2_090.jpg", "Video/2_091.jpg", "Video/2_092.jpg", "Video/2_093.jpg","Video/2_094.jpg", "Video/2_095.jpg", "Video/2_096.jpg", "Video/2_097.jpg", "Video/2_098.jpg", "Video/2_099.jpg", "Video/2_100.jpg", "Video/2_101.jpg", "Video/2_102.jpg", "Video/2_103.jpg", "Video/2_104.jpg", "Video/2_105.jpg", "Video/2_106.jpg", "Video/2_107.jpg", "Video/2_108.jpg", "Video/2_109.jpg", "Video/2_110.jpg", "Video/2_111.jpg",
+		"Video/2_112.jpg", "Video/2_113.jpg", "Video/2_114.jpg", "Video/2_115.jpg", "Video/2_116.jpg", "Video/2_117.jpg", "Video/2_118.jpg", "Video/2_119.jpg", "Video/2_120.jpg", "Video/2_121.jpg", "Video/2_122.jpg", "Video/2_123.jpg", "Video/2_124.jpg", "Video/2_125.jpg", "Video/2_126.jpg", "Video/2_127.jpg", "Video/2_128.jpg", "Video/2_129.jpg", "Video/2_130.jpg", "Video/2_131.jpg", "Video/2_132.jpg", "Video/2_133.jpg", "Video/2_134.jpg","Video/2_135.jpg", "Video/2_136.jpg",
 		"Video/2_137.jpg", "Video/2_138.jpg", "Video/2_139.jpg", "Video/2_140.jpg", "Video/2_141.jpg", "Video/2_142.jpg", "Video/2_143.jpg", "Video/2_144.jpg", "Video/2_145.jpg", "Video/2_146.jpg", "Video/2_147.jpg", "Video/2_148.jpg", "Video/2_149.jpg", "Video/2_150.jpg", "Video/2_151.jpg", "Video/2_152.jpg", "Video/2_153.jpg", "Video/2_154.jpg", "Video/2_155.jpg", "Video/2_156.jpg", "Video/2_157.jpg", "Video/2_158.jpg", "Video/2_159.jpg", "Video/2_160.jpg", "Video/2_161.jpg",
 		"Video/2_162.jpg", "Video/2_163.jpg", "Video/2_164.jpg", "Video/2_265.jpg", "Video/2_266.jpg", "Video/2_267.jpg", "Video/2_268.jpg", "Video/2_269.jpg", "Video/2_270.jpg", "Video/2_271.jpg", "Video/2_272.jpg", "Video/2_273.jpg", "Video/2_274.jpg", "Video/2_275.jpg", "Video/2_276.jpg", "Video/2_277.jpg", "Video/2_278.jpg", "Video/2_279.jpg", "Video/2_280.jpg", "Video/2_281.jpg", "Video/2_282.jpg", "Video/2_283.jpg", "Video/2_284.jpg", "Video/2_285.jpg", "Video/2_286.jpg",
 		"Video/2_287.jpg", "Video/2_288.jpg", "Video/2_289.jpg", "Video/2_290.jpg", "Video/2_291.jpg", "Video/2_292.jpg", "Video/2_293.jpg", "Video/2_294.jpg", "Video/2_295.jpg", "Video/2_296.jpg", "Video/2_297.jpg", "Video/2_298.jpg", "Video/2_299.jpg" };
 	*/
+
 	//ANIMATION MAKING 2nd option
 	std::string imageFileNames[] = { "Animation/3_000.jpg", "Animation/3_001.jpg", "Animation/3_002.jpg", "Animation/3_003.jpg", "Animation/3_004.jpg", "Animation/3_005.jpg", "Animation/3_006.jpg", "Animation/3_007.jpg", "Animation/3_008.jpg", "Animation/3_009.jpg", "Animation/3_010.jpg", "Animation/3_011.jpg", "Animation/3_012.jpg", "Animation/3_013.jpg", "Animation/3_014.jpg", "Animation/3_015.jpg", "Animation/3_016.jpg", "Animation/3_017.jpg", "Animation/3_018.jpg", "Animation/3_019.jpg",
 		"Animation/3_020.jpg", "Animation/3_021.jpg", "Animation/3_022.jpg", "Animation/3_023.jpg", "Animation/3_024.jpg", "Animation/3_025.jpg", "Animation/3_026.jpg", "Animation/3_027.jpg", "Animation/3_028.jpg", "Animation/3_029.jpg", "Animation/3_030.jpg", "Animation/3_031.jpg","Animation/3_032.jpg", "Animation/3_033.jpg", "Animation/3_034.jpg", "Animation/3_035.jpg", "Animation/3_036.jpg", "Animation/3_037.jpg", "Animation/3_038.jpg", "Animation/3_039.jpg", "Animation/3_040.jpg", "Animation/3_041.jpg",
@@ -62,12 +80,96 @@ int main()
 	//	}
 	//}
 
+	//...........................................................//
+
+	class Character {
+	public:
+		int health;
+		// add more properties as needed
+
+		Character() {
+			health = 200;
+			// add more initialization as needed
+		}
+
+		void takeDamage(int damage) {
+			health -= damage;
+			if (health < 0) {
+				health = 0;
+			}
+		}
+	};
+
+	class Enemy {
+	public:
+		int health;
+
+		Enemy() {
+			health = enemyHeathFull; // Set initial health to 100
+		}
+
+		void takeDamage(int damage) {
+			health -= damage;
+			if (health < 0) {
+				health = 0;
+			}
+		}
+	};
+
+	class Enemy_main {
+	public:
+		int health;
+
+		Enemy_main() {
+			health = enemyMainHeathFull; // Set initial health to 100
+		}
+
+		void takeDamage(int damage) {
+			health -= damage;
+			if (health < 0) {
+				health = 0;
+			}
+		}
+	};
+	//
+
+	class EnemyAircraft : public sf::Sprite {
+	public:
+		EnemyAircraft(sf::Texture& texture, float x, float y, float vx, float vy)
+			: sf::Sprite(texture), m_position(x, y), m_velocity(vx, vy)
+		{
+			// Set the sprite's initial position and scale
+			setPosition(100, 50);
+			setScale(0.5f, 0.5f);
+		}
+
+		void update(float dt)
+		{
+			// Update the position based on the velocity and delta time
+			m_position += m_velocity * dt;
+			setPosition(m_position);
+		}
+
+		// Accessors for the position and velocity
+		sf::Vector2f getPosition() const { return m_position; }
+		sf::Vector2f getVelocity() const { return m_velocity; }
+
+	private:
+		sf::Vector2f m_position;
+		sf::Vector2f m_velocity;
+	};
+
+	Character player;
+	Enemy enemy;
+	Enemy_main enemy_main;
 
 
 
+	//.......................................................//
 
 
-	//NEW GAME BACKGROUND
+
+	//NEW GAME BACKGROUND USING TEXTURE AND SPRITE CLASSES
 	sf::Texture newbackground;
 	if (!newbackground.loadFromFile("Image/mainbg.jpg"))
 	{
@@ -75,16 +177,15 @@ int main()
 	}
 	sf::Sprite newbackgroundsprite(newbackground);
 
-	//HIGH SCORE BACKGROUND
+	//HIGH SCORE BACKGROUND USING TEXTURE AND SPRITE CLASSES
 	sf::Texture scorebackground;
-	if (!scorebackground.loadFromFile("Image/hoisted_flagm.jpg"))
+	if (!scorebackground.loadFromFile("Image/b2.jpg"))
 	{
 		std::cout << "credits background error\n";
 	}
 	sf::Sprite scorebackgroundsprite(scorebackground);
 
-
-	//KILO FLIGHT BACKGROUND
+	//KILO FLIGHT BACKGROUND USING TEXTURE AND SPRITE CLASSES
 	sf::Texture kiloflightbackground;
 	if (!kiloflightbackground.loadFromFile("Image/b51.jpg"))
 	{
@@ -93,7 +194,7 @@ int main()
 	sf::Sprite kiloflightbackgroundsprite(kiloflightbackground);
 
 
-	//CREDITS BACKGROUND
+	//CREDITS BACKGROUND USING TEXTURE AND SPRITE CLASSES
 	sf::Texture creditbackground;
 	if (!creditbackground.loadFromFile("Image/credit1.jpg"))
 	{
@@ -101,26 +202,35 @@ int main()
 	}
 	sf::Sprite creditbackgroundsprite(creditbackground);
 
+	//INSTRUCTION BACKGROUND USING TEXTURE AND SPRITE CLASSES 
+	sf::Texture instructbackground;
+	if (!instructbackground.loadFromFile("Image/instructions.jpg"))
+	{
+		std::cout << "instruct background error\n";
+	}
+	sf::Sprite instructbackgroundsprite(instructbackground);
+
+ 
 
 
 
-	//FONT
+	//FONT CLASS
 	sf::Font font;
 	if (!font.loadFromFile("Fonts/Bootcamp.otf"))
 	{
 		cout << "Font error!!!\n";
 	}
 
-	//ANIMATION TEXT
-	sf::Text animation;
-	animation.setFont(font);
-	animation.setString("BENGALS AIR ASSAULT");
-	animation.setCharacterSize(60);
-	animation.setFillColor(sf::Color::Black);
-	animation.setPosition(493, 300);
+	////ANIMATION TEXT USING FONT CLASS
+	//sf::Text animation;
+	//animation.setFont(font);
+	//animation.setString("BENGALS AIR ASSAULT");
+	//animation.setCharacterSize(60);
+	//animation.setFillColor(sf::Color::Black);
+	//animation.setPosition(493, 300);
 
 
-	//BACKGROUND SOUND
+	//BACKGROUND SOUND USING SOUNDBUFFER AND SOUND CLASS
 	sf::SoundBuffer backsoundbuffer;
 	if (!backsoundbuffer.loadFromFile("AUDIO/epic-heroic-short-version-117402.wav"))
 	{
@@ -128,18 +238,19 @@ int main()
 	}
 	sf::Sound backsound;
 	backsound.setBuffer(backsoundbuffer);
+	backsound.setLoop(true);//PLAYING MUSIC IN A LOOP
 	backsound.play();
 
 
 
-	//NEW GAME OPTION CREATE
+	//NEW GAME OPTION CREATE USING RECTANGLESHAPE CLASS AND ALSO SET THE POSITION,SIZE AND COLOR with other member functions.
 	sf::RectangleShape rectangle1(sf::Vector2f(195, 50));
 	rectangle1.setPosition(468, 150);
 	rectangle1.setFillColor(sf::Color::Black);
 	rectangle1.setOutlineColor(sf::Color::White);
 	rectangle1.setOutlineThickness(4);
 
-	//NEW GAME TEXT
+	//NEW GAME TEXT USING TEXT CLASS AND ALSO SET THE POSITION,SIZE AND COLOR with other member functions.
 	sf::Text option1;
 	option1.setFont(font);
 	option1.setString("NEW GAME");
@@ -148,78 +259,113 @@ int main()
 	option1.setPosition(493, 150);
 
 
-	//HIGH SCORE OPTION CREATE
+	//HIGH SCORE OPTION CREATE USING RECTANGLESHAPE CLASS AND ALSO SET THE POSITION,SIZE AND COLOR with other member functions.
 	sf::RectangleShape rectangle2(sf::Vector2f(215, 50));
-	rectangle2.setPosition(460, 250);
+	rectangle2.setPosition(460, 220);
 	rectangle2.setFillColor(sf::Color::Black);
 	rectangle2.setOutlineColor(sf::Color::White);
 	rectangle2.setOutlineThickness(4);
 
-	//HIGH SCORE TEXT
+	//HIGH SCORE TEXT USING TEXT CLASS AND ALSO SET THE POSITION,SIZE AND COLOR with other member functions.
 	sf::Text option2;
 	option2.setFont(font);
 	option2.setString("HIGH SCORE");
 	option2.setCharacterSize(43);
 	option2.setFillColor(sf::Color::White);
-	option2.setPosition(490, 250);
+	option2.setPosition(490, 220);
 
-	//CREDITS OPTION CREATE
+
+	//// READ SCORE FROM FILE
+	//std::ifstream File("highscore.txt");
+	//if (!File.is_open())
+	//{
+	//	std::cout << "Error opening highscore file." << std::endl;
+	//	return 1;
+	//}
+	//std::string fileContents;
+	//std::string line;
+	//while (std::getline(File, line))
+	//{
+	//	fileContents += line + "\n";
+	//}
+	//File.close();
+	//
+	////SHOWING SCORE IN HIGH SCORE BACKGROUND
+	//sf::Text scoreText;
+	//scoreText.setFont(font);
+	//scoreText.setCharacterSize(16);
+	//scoreText.setFillColor(sf::Color::White);
+	//scoreText.setString(fileContents);
+
+	//CREDITS OPTION CREATE USING RECTANGLESHAPE CLASS AND ALSO SET THE POSITION,SIZE AND COLOR with other member functions.
 	sf::RectangleShape rectangle3(sf::Vector2f(154, 50));
-	rectangle3.setPosition(480, 350);
+	rectangle3.setPosition(490, 290);
 	rectangle3.setFillColor(sf::Color::Black);
 	rectangle3.setOutlineColor(sf::Color::White);
 	rectangle3.setOutlineThickness(4);
 
-	//CREDITS SCORE TEXT
+	//CREDITS TEXT USING TEXT CLASS AND ALSO SET THE POSITION,SIZE AND COLOR with other member functions.
 	sf::Text option3;
 	option3.setFont(font);
 	option3.setString("CREDITS");
 	option3.setCharacterSize(43);
 	option3.setFillColor(sf::Color::White);
-	option3.setPosition(500, 350);
+	option3.setPosition(510, 290);
 
-	//KILO FLIGHT OPTION CREATE
+	//KILO FLIGHT OPTION CREATE USING RECTANGLESHAPE CLASS AND ALSO SET THE POSITION,SIZE AND COLOR with other member functions.
 	sf::RectangleShape rectangle4(sf::Vector2f(215, 50));
-	rectangle4.setPosition(460, 450);
+	rectangle4.setPosition(460, 430);
 	rectangle4.setFillColor(sf::Color::Black);
 	rectangle4.setOutlineColor(sf::Color::White);
 	rectangle4.setOutlineThickness(4);
 
-	//KILO FLIGHT TEXT
+	//KILO FLIGHT TEXT USING TEXT CLASS AND ALSO SET THE POSITION,SIZE AND COLOR with other member functions.
 	sf::Text option4;
 	option4.setFont(font);
 	option4.setString("KILO FLIGHT");
 	option4.setCharacterSize(43);
 	option4.setFillColor(sf::Color::White);
-	option4.setPosition(490, 450);
+	option4.setPosition(490, 430);
 
-	//EXIT OPTION CREATE
+	//EXIT OPTION CREATE USING RECTANGLESHAPE CLASS AND ALSO SET THE POSITION,SIZE AND COLOR with other member functions.
 	sf::RectangleShape rectangle5(sf::Vector2f(85, 50));
-	rectangle5.setPosition(510, 550);
+	rectangle5.setPosition(520, 500);
 	rectangle5.setFillColor(sf::Color::Black);
 	rectangle5.setOutlineColor(sf::Color::White);
 	rectangle5.setOutlineThickness(4);
 
-	//EXIT OPTION TEXT
+	//EXIT OPTION TEXT USING TEXT CLASS AND ALSO SET THE POSITION,SIZE AND COLOR with other member functions.
 	sf::Text option5;
 	option5.setFont(font);
 	option5.setString("EXIT");
 	option5.setCharacterSize(43);
 	option5.setFillColor(sf::Color::White);
-	option5.setPosition(520, 550);
+	option5.setPosition(535, 500);
 
 
-	//BACK OPTION CREATE
+	//BACK OPTION CREATE USING RECTANGLESHAPE CLASS AND ALSO SET THE POSITION,SIZE AND COLOR with other member functions.
 	sf::RectangleShape rectangle6(sf::Vector2f(30, 30));
 	rectangle6.setPosition(5, 5);
-	rectangle6.setFillColor(sf::Color::Transparent);
+	rectangle6.setFillColor(sf::Color::White);
 	rectangle6.setOutlineColor(sf::Color::Black);
-	rectangle6.setOutlineThickness(2);
+	rectangle6.setOutlineThickness(3);
 
 
+	//INSTRUCTIONS OPTION CREATE USING RECTANGLESHAPE CLASS AND ALSO SET THE POSITION,SIZE AND COLOR with other member functions.
+	sf::RectangleShape rectangle7(sf::Vector2f(215, 50));
+	rectangle7.setPosition(460, 360);
+	rectangle7.setFillColor(sf::Color::Black);
+	rectangle7.setOutlineColor(sf::Color::White);
+	rectangle7.setOutlineThickness(4);
 
-	//MUSIC ON/OFF OPTION
-	
+	//INSTRUCTIONS TEXT USING TEXT CLASS AND ALSO SET THE POSITION,SIZE AND COLOR with other member functions.
+	sf::Text option7;
+	option7.setFont(font);
+	option7.setString("INSTRUCTIONS");
+	option7.setCharacterSize(43);
+	option7.setFillColor(sf::Color::White);
+	option7.setPosition(480, 360);
+
 
 
 	//CHARACTER CREATE
@@ -231,22 +377,35 @@ int main()
 	sf::Sprite charactersprite(charactertexture);
 	charactersprite.setPosition(sf::Vector2f(500, 570));
 
-	//FIRE CREATE
-	sf::Texture firetexture;
-	if (!firetexture.loadFromFile("Image/fire.png"))
+	//CHAR FIRE CREATE
+	sf::Texture char_firetexture;
+	if (!char_firetexture.loadFromFile("Image/fire.png"))
 	{
-		cout << "fire error!!\n";
+		cout << "char fire error!!\n";
 	}
-	sf::Sprite firesprite(firetexture);
+	sf::Sprite char_firesprite(char_firetexture);
+	vector<sf::Sprite>charFireSpriteVect;
 
-	//FIRE SOUND
-	sf::SoundBuffer firesoundbuffer;
-	if (!firesoundbuffer.loadFromFile("AUDIO/gun1.wav"))
+
+	//ENEMY FIRE CREATE
+	sf::Texture enemy_firetexture;
+	if (!enemy_firetexture.loadFromFile("Image/fire.png"))
 	{
-		cout << "Fire sound error!!!\n";
+		cout << "enemy fire error!!\n";
 	}
-	sf::Sound firesound;
-	firesound.setBuffer(firesoundbuffer);
+	sf::Sprite enemy_firesprite(enemy_firetexture);
+	sf::RectangleShape enemyFireBox(sf::Vector2f(20, 20));
+	enemyFireBox.setFillColor(sf::Color::Red);
+
+
+	//CHAR FIRE SOUND
+	sf::SoundBuffer char_firesoundbuffer;
+	if (!char_firesoundbuffer.loadFromFile("AUDIO/gun1.wav"))
+	{
+		cout << "Char Fire sound error!!!\n";
+	}
+	sf::Sound char_firesound;
+	char_firesound.setBuffer(char_firesoundbuffer);
 
 
 	//ENEMY CREATE
@@ -257,15 +416,20 @@ int main()
 	}
 	sf::Sprite enemy1sprite(enemy1texture);
 	enemy1sprite.setPosition(sf::Vector2f(200, 50));
+	sf::FloatRect enemyBound = enemy1sprite.getGlobalBounds();
+	vector<sf::Sprite>enemies;
+	enemies.push_back(enemy1sprite);
 
+	//ENEMY MAIN
 	sf::Texture enemy2texture;
 	if (!enemy2texture.loadFromFile("Image/enemy2.png"))
 	{
 		cout << "enemy2 error!!\n";
 	}
 	sf::Sprite enemy2sprite(enemy2texture);
-	enemy2sprite.setPosition(sf::Vector2f(0, 15.f));
+	enemy2sprite.setPosition(sf::Vector2f(0, 10.f));
 
+	//ENEMY MAIN DESTROYED
 	sf::Texture enemy3texture;
 	if (!enemy3texture.loadFromFile("Image/enemy2(destroyed).png"))
 	{
@@ -290,13 +454,47 @@ int main()
 	sf::Sprite oilsprite(oiltexture);
 	oilsprite.setPosition(sf::Vector2f(280, 0));
 
+	//Collision
+	sf::FloatRect nextPosition;
+	sf::RectangleShape nextBox;
 
-	//Health-bar creation
-	sf::RectangleShape healthBar(sf::Vector2f(100, 10));
-	healthBar.setFillColor(sf::Color::Black);
-	healthBar.setPosition(enemy2sprite.getPosition().x, enemy2sprite.getPosition().y - 20);
 
-	//healthBar.setSize(sf::Vector2f(enemy2sprite.health, 10));
+	///TIME DELAY FOR ENEMY FIRE
+	//sf::Clock clock;
+	//float fireInterval = 0.5f;
+	
+
+
+	//Player HealthBar Making
+	sf::Vector2f healthBarSize(100, 10);
+	//back
+	sf::RectangleShape charHealthBarBack(sf::Vector2f(healthBarSize.x, healthBarSize.y));
+	charHealthBarBack.setFillColor(sf::Color::Red);
+	charHealthBarBack.setPosition(charactersprite.getPosition().x + 25, charactersprite.getPosition().y - 15);
+	//front
+	sf::RectangleShape charHealthBarFront(sf::Vector2f((float)player.health / maxCharHealth * healthBarSize.x, healthBarSize.y));
+	charHealthBarFront.setFillColor(sf::Color::Black);
+	charHealthBarFront.setPosition(charactersprite.getPosition().x + 25, charactersprite.getPosition().y - 15);
+
+
+	//Explosion Sound
+	sf::SoundBuffer explosionBuffer;
+	if (!explosionBuffer.loadFromFile("AUDIO/explosion.wav")) {
+		cout << "explosionSoudError!!\n";
+	}
+	sf::Sound explosionsound;
+	explosionsound.setBuffer(explosionBuffer);
+
+
+	//missile reload Sound
+	sf::SoundBuffer reloadsoundbuffer;
+	if (!reloadsoundbuffer.loadFromFile("AUDIO/reload.wav"))
+	{
+		cout << "reload sound error!!!\n";
+	}
+	sf::Sound reloadsound;
+	reloadsound.setBuffer(reloadsoundbuffer);
+
 
 
 	//MOUSE CURSOR APPEARANCE
@@ -310,52 +508,12 @@ int main()
 	// Set the cursor for the window
 	window.setMouseCursor(cursor);
 
-
-	class Enemy {
-	public:
-		int health;
-
-		Enemy() {
-			health = 100; // Set initial health to 100
-		}
-
-		void takeDamage(int damage) {
-			health -= damage;
-			if (health < 0) {
-				health = 0;
-			}
-		}
-	};
-
-	//........................................................................
-	class EnemyAircraft : public sf::Sprite {
-	public:
-		EnemyAircraft(sf::Texture& texture, float x, float y, float vx, float vy)
-			: sf::Sprite(texture), m_position(x, y), m_velocity(vx, vy)
-		{
-			// Set the sprite's initial position and scale
-			setPosition(10, 50);
-			setScale(0.5f, 0.5f);
-		}
-
-		void update(float dt)
-		{
-			// Update the position based on the velocity and delta time
-			m_position += m_velocity * dt;
-			setPosition(m_position);
-		}
-
-		// Accessors for the position and velocity
-		sf::Vector2f getPosition() const { return m_position; }
-		sf::Vector2f getVelocity() const { return m_velocity; }
-
-	private:
-		sf::Vector2f m_position;
-		sf::Vector2f m_velocity;
-	};
+	//TIME DELAY FOR ENEMY FIRING
+	sf::Clock clock;
+	float fireInterval = 2.0f;
 
 
-
+	//...................................................................................//
 
 
 
@@ -409,6 +567,18 @@ int main()
 					option3.setFillColor(sf::Color::White);
 				}
 
+				//INSTRUCTION COLOR CHANGE
+				if (rectangle7.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
+				{
+					rectangle7.setOutlineColor(sf::Color(0, 128, 255)); // Lighter shade
+					option7.setFillColor(sf::Color(30, 144, 255));
+				}
+				else
+				{
+					rectangle7.setOutlineColor(sf::Color::White); // Default color
+					option7.setFillColor(sf::Color::White);
+				}
+
 				//KILO FLIGHT COLOR CHANGE
 				if (rectangle4.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
 				{
@@ -442,6 +612,8 @@ int main()
 				quit_anim = 1;
 			}*/
 
+
+			//OPTION CLICK DETECTION BY MOUSE
 			else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 			{
 
@@ -468,8 +640,15 @@ int main()
 					clicked = 3;
 				}
 
+				//INSTRUCTION CLICKED
+				else if (clicked == 0 && rectangle7.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+				{
+					std::cout << "instruction clicked!!\n";
+					clicked = 6;
+				}
+
 				//BACK CLICKED
-				else if ((clicked == 2 || clicked == 3 || clicked == 4) && rectangle6.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+				else if ((clicked == 2 || clicked == 3 || clicked == 4|| clicked == 6) && rectangle6.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
 				{
 					std::cout << "back clicked!!\n";
 					clicked = 0;
@@ -488,15 +667,56 @@ int main()
 				}
 			}
 
+			//New game mechanics
 			if (clicked == 1)
 			{
-				if (event.type == sf::Event::MouseButtonReleased && event.key.code == sf::Mouse::Left)
-				{
-					firesound.play();
-
-					fire.push_back(make_pair(charactersprite.getPosition().x, charactersprite.getPosition().y));
+				//Escape clicked
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
+					clicked = 0;
+					continue;
 				}
+
+				// draw player and enemy health bars
+				sf::RectangleShape playerHealthBar(sf::Vector2f(player.health, 20));
+				playerHealthBar.setFillColor(sf::Color::Green);
+				window.draw(playerHealthBar);
+
+				sf::RectangleShape enemyHealthBar(sf::Vector2f(enemy.health, 20));
+				enemyHealthBar.setFillColor(sf::Color::Red);
+				window.draw(enemyHealthBar);
+
+				/*if (char_firesprite.getGlobalBounds().intersects(enemy1sprite.getGlobalBounds())) {
+					enemy.takeDamage(50);
+				}
+				if (char_firesprite.getGlobalBounds().intersects(enemy2sprite.getGlobalBounds())) {
+					enemy_main.takeDamage(50);
+				}
+				if (enemy_firesprite.getGlobalBounds().intersects(charactersprite.getGlobalBounds())) {
+					player.takeDamage(40);
+				}
+				if (enemy1sprite.getGlobalBounds().intersects(charactersprite.getGlobalBounds())) {
+					player.takeDamage(20);
+					enemy.takeDamage(50);
+				}*/
+
+
+				//Char_firing
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space && ammo > 0)
+				{
+					char_firesound.play();
+					ammo--;
+					char_fire.push_back(make_pair(charactersprite.getPosition().x, charactersprite.getPosition().y));
+					charFireSpriteVect.push_back(char_firesprite);
+
+				}  
+				////Ammo reloading
+				//if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::RShift) {
+				//	reload();
+				//	reloadsound.play();
+				//}
+
 			}
+			
 		}
 
 
@@ -507,24 +727,30 @@ int main()
 			if (charactersprite.getPosition().x >= -20)
 			{
 				charactersprite.move(sf::Vector2f(-1, 0));
+				charHealthBarBack.move(sf::Vector2f(-1, 0));
+				charHealthBarFront.move(sf::Vector2f(-1, 0));
 			}
 		}
 
 		//RIGHT MOVEMENT
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 		{
-			if (charactersprite.getPosition().x <= 1100)
+			if (charactersprite.getPosition().x <= 1000)
 			{
 				charactersprite.move(sf::Vector2f(1, 0));
+				charHealthBarBack.move(sf::Vector2f(1, 0));
+				charHealthBarFront.move(sf::Vector2f(1, 0));
 			}
 		}
 
 		//UP MOVEMENT
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 		{
-			if (charactersprite.getPosition().y >= 0)
+			if (charactersprite.getPosition().y >= 450)
 			{
 				charactersprite.move(sf::Vector2f(0, -1));
+				charHealthBarBack.move(sf::Vector2f(0, -1));
+				charHealthBarFront.move(sf::Vector2f(0, -1));
 			}
 		}
 
@@ -534,6 +760,8 @@ int main()
 			if (charactersprite.getPosition().y <= 570)
 			{
 				charactersprite.move(sf::Vector2f(0, 1));
+				charHealthBarBack.move(sf::Vector2f(0, 1));
+				charHealthBarFront.move(sf::Vector2f(0, 1));
 			}
 		}
 
@@ -541,13 +769,15 @@ int main()
 		//DRAW AND SHOW IN WINDOW
 		window.clear();
 		
-		window.draw(animation);
+		//window.draw(animation);
+	
+
 		//BACKGROUND ANIMATION MAKING WITH IMAGES. IT WILL CONTINUE SHOWING UNTIL MOUSE IS CLICKED
 		if (clicked == -1)
 		{
 			for (int i = 0; i <110; i++) 
 			{
-				window.draw(animation);
+				//window.draw(animation);
 				sf::Texture Videotexture;
 				if (!Videotexture.loadFromFile(imageFileNames[i])) {
 					cout << "Video images error!!!!\n";
@@ -563,34 +793,105 @@ int main()
 
 
 
-		else if (clicked == 1)// showing new game, character,enemy. 
+		else if (clicked == 1)// SHOWING NEW GAME, ENEMY AND SPRITE
 		{
 			if (enemy2sprite.getPosition().x <= 0)
 				direction = 1;
-			else if ((enemy2sprite.getPosition().x + 80) >= window.getSize().x)
+			else if ((enemy2sprite.getPosition().x + 100) >= window.getSize().x)
 				direction = 0;
 
 			if (direction == 0) {
-				enemy2sprite.move(-1.f, 0);
+				enemy2sprite.move(-.5f, 0);//enemy plane speed control
 			}
 			else {
-				enemy2sprite.move(1.f, 0);
+				enemy2sprite.move(.5f, 0);//enemy plane speed control
 			}
 
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
 				std::cout << "Escape pressed!!\n";
 				clicked = 0;
 			}
-			
+
+			//ENEMY FIRING TIMER
+			sf::Time deltaTime = clock.restart();
+			float elapsedTime = deltaTime.asSeconds();
+
+			static float timeSinceLastFire = 0.f;
+			timeSinceLastFire += elapsedTime;
+			if (timeSinceLastFire >= fireInterval) {
+				enemy_fire.push_back(make_pair(enemy2sprite.getPosition().x, enemy2sprite.getPosition().y));
+				timeSinceLastFire = 0.f;
+			}
+
+			//enemy spawn 
+			if (enemyspawnTimer < 500) {
+				enemyspawnTimer++;
+			}
+
+			else {
+				//Generating random x, y positions
+				float xp = rand() % window.getSize().x;
+				float yp = rand() % window.getSize().y;
+				enemy1sprite.setPosition(xp, 120);
+				enemies.push_back(sf::Sprite(enemy1sprite));
+				enemyspawnTimer = 0;
+			}
+			for (size_t i = 0; i < enemies.size(); i++) 
+			{
+				enemies[i].move(0.f, .1f);
+				if (enemies[i].getPosition().y > window.getSize().y)
+					enemies.erase(enemies.begin() + i);
+			}
+			//missile enemy collision
+
+			//enemy_black character collision
+			for (size_t i = 0; i < enemies.size(); i++) 
+			{
+				if (enemies[i].getGlobalBounds().intersects(charactersprite.getGlobalBounds()))
+				{
+					enemies.erase(enemies.begin() + i);
+				}
+			}
+		
+
+			//CHARACTER AND ENEMY HEALTH AND POINTS
+			sf::Text charpoint;
+			charpoint.setFont(font);
+			charpoint.setPosition(20, 20);
+			charpoint.setCharacterSize(40);
+			charpoint.setFillColor(sf::Color::Green);
+			charpoint.setOutlineThickness(2);
+			charpoint.setOutlineColor(sf::Color::Black);
+			std::string pointstring = std::to_string(point);
+			charpoint.setString("POINTS- " + pointstring);
+
+			// AMMO TEXT
+			sf::Text ammotext;
+			ammotext.setFont(font);
+			ammotext.setPosition(20, 70);
+			ammotext.setCharacterSize(30);
+			ammotext.setFillColor(sf::Color::Green);
+			ammotext.setOutlineThickness(2);
+			ammotext.setOutlineColor(sf::Color::Black);
+			std::string ammostring = std::to_string(ammo);
+			ammotext.setString("AMMO - " + ammostring);
+
+	
 			window.draw(newbackgroundsprite);
 			window.draw(charactersprite);
-			window.draw(enemy1sprite);
 			window.draw(enemy2sprite);
-			window.draw(enemy3sprite);
-			window.draw(fuelsprite);
-			window.draw(oilsprite);
+			window.draw(charHealthBarBack);
+			window.draw(charHealthBarFront);
+			window.draw(charpoint);
+			window.draw(ammotext);
+
+			for (size_t i = 0; i < enemies.size(); i++) {
+				window.draw(enemies[i]);
+			}	
 		}
-		else if (clicked == 0)
+
+
+		else if (clicked == 0)// SHOW+ING MAIN MENU OF THE GAME WITH DIFFEREFNT OPTIONS
 		{
 			window.draw(backgroundsprite1);
 			window.draw(rectangle1);
@@ -603,118 +904,156 @@ int main()
 			window.draw(option4);
 			window.draw(rectangle5);
 			window.draw(option5);
+			window.draw(rectangle7);
+			window.draw(option7);
 		}
 
 
-		else if (clicked == 2)
+		else if (clicked == 2)// FILE READ AND SHOW IN THE WINDOW
 		{
+			// READ SCORE FROM FILE
+			std::ifstream File("highscore.txt");
+			if (!File.is_open())
+			{
+				std::cout << "Error opening highscore file." << std::endl;
+				return 1;
+			}
+			
+			std::string fileContents="";
+			std::string line;
+			while (std::getline(File, line))
+			{
+				fileContents += line + "\n";
+			}
+			File.close();
+
+			//SHOWING SCORE IN HIGH SCORE BACKGROUND
+			sf::Text scoreText1;
+			scoreText1.setFont(font);
+			scoreText1.setPosition(460, 100);
+			scoreText1.setCharacterSize(60);
+			scoreText1.setFillColor(sf::Color::Green);
+			scoreText1.setOutlineThickness(3);
+			scoreText1.setOutlineColor(sf::Color::Black);
+			scoreText1.setString("HIGH SCORES");
+			sf::Text scoreText2;
+			scoreText2.setFont(font);
+			scoreText2.setPosition(550, 200);
+			scoreText2.setCharacterSize(50);
+			scoreText2.setFillColor(sf::Color::Green);
+			scoreText2.setOutlineThickness(2);
+			scoreText2.setOutlineColor(sf::Color::Black);
+			scoreText2.setString(fileContents);
+
 			window.draw(scorebackgroundsprite);
+			window.draw(scoreText1);
+			window.draw(scoreText2);
 			window.draw(rectangle6);
+			
+
+			
 		}
 
-		else if (clicked == 3)
+		else if (clicked == 3)// SHOWING CREDITS BACKGROUND
 		{
 			window.draw(creditbackgroundsprite);
 			window.draw(rectangle6);
+			
 		}
 
-		else if (clicked == 4)
+		else if (clicked == 4)// SHOWING THE KILO FLIGHT BACKGROUND
 		{
 			window.draw(kiloflightbackgroundsprite);
 			window.draw(rectangle6);
+			
 		}
 
-		else if (clicked == 5)
+		else if (clicked == 5)// EXIT OPTION CLICKED
 		{
-			window.close();
+			window.close();// EXIT FROM GAME
 		}
 
-
-		if (!fire.empty())
+		else if (clicked == 6)// SHOWING INSTRUCTION BACKGROUND
 		{
-			for (int i = 0; i < fire.size(); i++)
+			window.draw(instructbackgroundsprite);
+			window.draw(rectangle6);
+			
+		}
+		
+
+		//Char firing
+		if (!char_fire.empty())
+		{
+			for (int i = 0; i < char_fire.size(); i++)
 			{
+				char_fire[i].second -= 2;
 
-				fire[i].second -= 2;
-
-				if (fire[i].second <= -40)
+				if (char_fire[i].second <= -40)
 				{
 					continue;
 				}
-				firesprite.setPosition(sf::Vector2f(fire[i].first + 45, fire[i].second + 5));
-				firesprite.move(sf::Vector2f(0, -2));
-				window.draw(firesprite);
+				charFireSpriteVect[i].setPosition(sf::Vector2f(char_fire[i].first + 30, char_fire[i].second + 5));
+				charFireSpriteVect[i].move(sf::Vector2f(0, -2));
+				for (size_t k = 0; k < enemies.size(); k++) {
+					if (charFireSpriteVect[i].getGlobalBounds().intersects(enemies[k].getGlobalBounds())) {
+						charFireSpriteVect.erase(charFireSpriteVect.begin() + i);
+						char_fire.erase(char_fire.begin() + i);
+						enemies.erase(enemies.begin() + k);
+						k--;
+						if (k--)
+						{
+							point++;
+							ammo++;
+						}
+						else if (!k--)
+						{
+							ammo--;
+						}
+						--i; // Decrement the loop counter
+						break; // Exit the loop after erasing the element
+					}
+				}
+			}
+		}
+		
+		for (size_t i = 0; i < charFireSpriteVect.size(); i++)
+		{
+			window.draw(charFireSpriteVect[i]);
+		}
+
+		//Enemy firing
+		if (!enemy_fire.empty())
+		{
+			for (int j = 0; j < enemy_fire.size(); j++)
+			{
+
+				enemy_fire[j].second += 2;
+
+				if (enemy_fire[j].second <= -30)
+				{
+					continue;
+				}
+
+				if (enemyFireBox.getGlobalBounds().intersects(charHealthBarBack.getGlobalBounds())) {
+					player.health -= 40;
+					window.draw(rectangle6);
+				}
+
+				enemy_firesprite.setPosition(sf::Vector2f(enemy_fire[j].first + 45, enemy_fire[j].second + 15));
+				enemy_firesprite.move(sf::Vector2f(0, -2));
+				window.draw(enemy_firesprite);
 			}
 		}
 
 
-		window.display();
+
+		window.display();// DISPLAY ALL THE THINGS IN WINDOW
 	}
 
 }
 
-/*
-using namespace sf;
-int main() {
-	RenderWindow window(sf::VideoMode(1200, 850), "Bengal's air assault");
-	window.setFramerateLimit(60);
-	int direction = 0;
-
-	CircleShape hoop;
-	hoop.setRadius(50.f);
-	hoop.setFillColor(Color::Black);
-	hoop.setOutlineThickness(2.f);
-	hoop.setOutlineColor(Color::Blue);
-	hoop.setPosition(Vector2f(0, 10.f));
-	bool isShot = false;
 
 
-	CircleShape ball;
-	ball.setRadius(20.f);
-	ball.setFillColor(Color::Red);
-	ball.setOutlineThickness(2.f);
-	ball.setOutlineColor(Color::Cyan);
-	ball.setPosition(Vector2f(0, window.getSize().y-ball.getRadius()*3));
-	while (window.isOpen()) {
-		Event event;
-		while (window.pollEvent(event)) {
-			if (event.type == Event::Closed)
-				window.close();
-			if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape)
-				window.close();
-		}
-		//Update hoop
-		if (hoop.getPosition().x <= 0)
-			direction = 1;
-		else if (hoop.getPosition().x + hoop.getRadius() >= window.getSize().x)
-			direction = 0;
-		if (direction == 0) {
-			hoop.move(-5.f, 0);
-		}
-		else {
-			hoop.move(5.f, 0);
-		}
-		//Update ball
-		if (Mouse::isButtonPressed(Mouse::Left) && !isShot) {
-			isShot = true;
-		}
-		if(!isShot)
-			ball.setPosition(Mouse::getPosition(window).x, ball.getPosition().y);
-		else
-			ball.move(0, -5.f);
-		//Collision Test
-		if (ball.getPosition().y < 0 || ball.getGlobalBounds().intersects(hoop.getGlobalBounds())) {
-			isShot = false;
-			ball.setPosition(ball.getPosition().x, window.getSize().y - ball.getRadius() * 3);
-		}
-		window.clear(Color::White);
-		//Draw
-		window.draw(hoop);
-		window.draw(ball);
-		window.display();
-	}
-	return 0;
-}*/
 
 
 

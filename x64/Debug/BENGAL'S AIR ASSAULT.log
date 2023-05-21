@@ -1,2 +1,246 @@
-﻿  BENGAL'S AIR ASSAULT.cpp
-  BENGAL'S AIR ASSAULT.vcxproj -> D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\x64\Debug\BENGAL'S AIR ASSAULT.exe
+﻿  BENGAL'S AIR ASSAULT_MAIN.cpp
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(28,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(533,81): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(533,62): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(545,81): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(545,62): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(557,84): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(557,65): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(569,81): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(569,62): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(581,81): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(581,62): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(593,81): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(593,62): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(623,93): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(623,76): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(629,98): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(629,81): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(635,98): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(635,81): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(642,98): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(642,81): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(649,147): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(649,130): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(655,98): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(655,81): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(661,98): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(661,81): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(678,59): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(682,57): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(789,31): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(833,14): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(834,14): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(971,97): warning C4244: 'argument': conversion from '_Ty2' to 'T', possible loss of data
+          with
+          [
+              _Ty2=double
+          ]
+          and
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(971,71): warning C4244: 'argument': conversion from '_Ty1' to 'T', possible loss of data
+          with
+          [
+              _Ty1=double
+          ]
+          and
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(980,44): error C2059: syntax error: ')'
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(1007,94): warning C4244: 'argument': conversion from '_Ty2' to 'T', possible loss of data
+          with
+          [
+              _Ty2=double
+          ]
+          and
+          [
+              T=float
+          ]
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(1007,67): warning C4244: 'argument': conversion from '_Ty1' to 'T', possible loss of data
+          with
+          [
+              _Ty1=double
+          ]
+          and
+          [
+              T=float
+          ]
