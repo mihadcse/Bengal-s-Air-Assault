@@ -8,28 +8,91 @@
 #include<SFML/Config.hpp>
 #include<cstdlib>
 #include<fstream>
+#include<string>
+#include <sstream>
 using namespace std;
 
 vector<pair <double, double> >char_fire, enemy_fire;
 float enemyShotTimer = 0.0f;
 float enemyShotDelay = 2.0f;
-
+int max_ammo = 10, ammo = 10;
+int char_health = 10, enemy_health = 10;
 int enemyspawnTimer = 0;
 int maxCharHealth = 200;
 int enemyHeathFull = 50;
 int enemyMainHeathFull = 500;
 int point = 0;
+int update = 1;
+int score_show=0;
 
-//void reload() {
-//	ammo = max_ammo;
-//}
+void reload() {
+	ammo = max_ammo;
+}
+
+void reset_game()
+{
+	 enemyShotTimer = 0.0f;
+	 enemyShotDelay = 2.0f;
+	 ammo = 10;
+	 char_health = 10, enemy_health = 10;
+	enemyspawnTimer = 0;
+	maxCharHealth = 200;
+	enemyHeathFull = 50;
+	 enemyMainHeathFull = 500;
+	 point = 0;
+}
+
+void score_update()
+{
+	// READ SCORE FROM FILE
+	std::ifstream File("highscore.txt");
+	if (!File.is_open())
+	{
+		std::cout << "Error opening highscore file." << std::endl;
+		return;
+	}
+
+	std::vector<int> scores;
+	scores.push_back(point);
+	std::string line;
+	while (std::getline(File, line))
+	{
+		stringstream ss;
+		ss << line;
+		int num;
+		ss >> num;
+		scores.push_back(num);
+	}
+	File.close();
+	
+	std::sort(scores.begin(), scores.end(), greater <>());
+	cout << "UPDATE"<< point;
+
+	
+	std::ofstream File_new("highscore.txt", std::ofstream::out);
+	if (!File_new.is_open())
+	{
+		std::cout << "Error opening highscore file." << std::endl;
+		return;
+	}
+	else
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			File_new << scores[i]<<'\n';
+		}
+	}
+	File_new.close();
+	update = 0;
+}
 
 int main()
 {
-	int max_ammo = 10, ammo = 10;
+	
 	srand(time(NULL));
 	int direction = 0;
 	int clicked = -1, quit_anim = 0;
+	
 
 	//WINDOW CREATE AND BACKGROUND
 	sf::RenderWindow window(sf::VideoMode(1150, 680), "Bengal's air assault");// this window ratio is fixed. It will show the window with a height of 1150 and width of 680
@@ -204,14 +267,27 @@ int main()
 
 	//INSTRUCTION BACKGROUND USING TEXTURE AND SPRITE CLASSES 
 	sf::Texture instructbackground;
-	if (!instructbackground.loadFromFile("Image/instructions.jpg"))
+	if (!instructbackground.loadFromFile("Image/ins1.jpg"))
 	{
 		std::cout << "instruct background error\n";
 	}
 	sf::Sprite instructbackgroundsprite(instructbackground);
 
- 
+	// WINNER BACKGROUND
+	sf::Texture winnerbackground;
+	if (!winnerbackground.loadFromFile("Image/victory.jpg"))
+	{
+		std::cout << "winner background error\n";
+	}
+	sf::Sprite winnerbackgroundsprite(winnerbackground);
 
+	// GAME OVER BACKGROUND
+	sf::Texture gameoverbackground;
+	if (!gameoverbackground.loadFromFile("Image/gameover.jpg"))
+	{
+		std::cout << "game over background error\n";
+	}
+	sf::Sprite gameoverbackgroundsprite(gameoverbackground);
 
 
 	//FONT CLASS
@@ -239,7 +315,7 @@ int main()
 	sf::Sound backsound;
 	backsound.setBuffer(backsoundbuffer);
 	backsound.setLoop(true);//PLAYING MUSIC IN A LOOP
-	backsound.play();
+	//backsound.play();
 
 
 
@@ -274,28 +350,6 @@ int main()
 	option2.setFillColor(sf::Color::White);
 	option2.setPosition(490, 220);
 
-
-	//// READ SCORE FROM FILE
-	//std::ifstream File("highscore.txt");
-	//if (!File.is_open())
-	//{
-	//	std::cout << "Error opening highscore file." << std::endl;
-	//	return 1;
-	//}
-	//std::string fileContents;
-	//std::string line;
-	//while (std::getline(File, line))
-	//{
-	//	fileContents += line + "\n";
-	//}
-	//File.close();
-	//
-	////SHOWING SCORE IN HIGH SCORE BACKGROUND
-	//sf::Text scoreText;
-	//scoreText.setFont(font);
-	//scoreText.setCharacterSize(16);
-	//scoreText.setFillColor(sf::Color::White);
-	//scoreText.setString(fileContents);
 
 	//CREDITS OPTION CREATE USING RECTANGLESHAPE CLASS AND ALSO SET THE POSITION,SIZE AND COLOR with other member functions.
 	sf::RectangleShape rectangle3(sf::Vector2f(154, 50));
@@ -346,7 +400,7 @@ int main()
 	//BACK OPTION CREATE USING RECTANGLESHAPE CLASS AND ALSO SET THE POSITION,SIZE AND COLOR with other member functions.
 	sf::RectangleShape rectangle6(sf::Vector2f(30, 30));
 	rectangle6.setPosition(5, 5);
-	rectangle6.setFillColor(sf::Color::White);
+	rectangle6.setFillColor(sf::Color::Transparent);
 	rectangle6.setOutlineColor(sf::Color::Black);
 	rectangle6.setOutlineThickness(3);
 
@@ -389,13 +443,14 @@ int main()
 
 	//ENEMY FIRE CREATE
 	sf::Texture enemy_firetexture;
-	if (!enemy_firetexture.loadFromFile("Image/fire.png"))
+	if (!enemy_firetexture.loadFromFile("Image/fire_enemy.png"))
 	{
 		cout << "enemy fire error!!\n";
 	}
 	sf::Sprite enemy_firesprite(enemy_firetexture);
 	sf::RectangleShape enemyFireBox(sf::Vector2f(20, 20));
 	enemyFireBox.setFillColor(sf::Color::Red);
+	vector<sf::Sprite>enemyFireSpriteVect;
 
 
 	//CHAR FIRE SOUND
@@ -469,11 +524,11 @@ int main()
 	sf::Vector2f healthBarSize(100, 10);
 	//back
 	sf::RectangleShape charHealthBarBack(sf::Vector2f(healthBarSize.x, healthBarSize.y));
-	charHealthBarBack.setFillColor(sf::Color::Red);
+	charHealthBarBack.setFillColor(sf::Color::Transparent);
 	charHealthBarBack.setPosition(charactersprite.getPosition().x + 25, charactersprite.getPosition().y - 15);
 	//front
 	sf::RectangleShape charHealthBarFront(sf::Vector2f((float)player.health / maxCharHealth * healthBarSize.x, healthBarSize.y));
-	charHealthBarFront.setFillColor(sf::Color::Black);
+	charHealthBarFront.setFillColor(sf::Color::Transparent);
 	charHealthBarFront.setPosition(charactersprite.getPosition().x + 25, charactersprite.getPosition().y - 15);
 
 
@@ -648,7 +703,7 @@ int main()
 				}
 
 				//BACK CLICKED
-				else if ((clicked == 2 || clicked == 3 || clicked == 4|| clicked == 6) && rectangle6.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+				else if ((clicked == 2 || clicked == 3 || clicked == 4|| clicked == 6 || clicked==7 || clicked == 8) && rectangle6.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
 				{
 					std::cout << "back clicked!!\n";
 					clicked = 0;
@@ -660,7 +715,7 @@ int main()
 					clicked = 4;
 				}
 				//EXIT CLICKED
-				else if (clicked == 0 && rectangle5.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+				else if ((clicked == 0 ||clicked == 7|| clicked==8) && rectangle5.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
 				{
 					std::cout << "exit clicked!!\n";
 					clicked = 5;
@@ -709,13 +764,17 @@ int main()
 					charFireSpriteVect.push_back(char_firesprite);
 
 				}  
-				////Ammo reloading
-				//if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::RShift) {
-				//	reload();
-				//	reloadsound.play();
-				//}
+				//Ammo reloading
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::RShift) {
+					if (ammo == 0)
+					{
+						reload();
+						reloadsound.play();
+					}
+				}
 
 			}
+			
 			
 		}
 
@@ -821,6 +880,7 @@ int main()
 			if (timeSinceLastFire >= fireInterval) {
 				enemy_fire.push_back(make_pair(enemy2sprite.getPosition().x, enemy2sprite.getPosition().y));
 				timeSinceLastFire = 0.f;
+				enemyFireSpriteVect.push_back(enemy_firesprite);
 			}
 
 			//enemy spawn 
@@ -850,6 +910,7 @@ int main()
 				if (enemies[i].getGlobalBounds().intersects(charactersprite.getGlobalBounds()))
 				{
 					enemies.erase(enemies.begin() + i);
+					char_health--;
 				}
 			}
 		
@@ -876,6 +937,38 @@ int main()
 			std::string ammostring = std::to_string(ammo);
 			ammotext.setString("AMMO - " + ammostring);
 
+			//ENEMY HEALTH
+			sf::Text charhealthtext;
+			charhealthtext.setFont(font);
+			charhealthtext.setPosition(20, 110);
+			charhealthtext.setCharacterSize(30);
+			charhealthtext.setFillColor(sf::Color::Green);
+			charhealthtext.setOutlineThickness(2);
+			charhealthtext.setOutlineColor(sf::Color::Black);
+			std::string charhealthstring = std::to_string(char_health);
+			charhealthtext.setString("CHAR_HEALTH - " + charhealthstring);
+
+
+			//ENEMY HEALTH
+			sf::Text enemyhealthtext;
+			enemyhealthtext.setFont(font);
+			enemyhealthtext.setPosition(900, 70);
+			enemyhealthtext.setCharacterSize(30);
+			enemyhealthtext.setFillColor(sf::Color::Green);
+			enemyhealthtext.setOutlineThickness(2);
+			enemyhealthtext.setOutlineColor(sf::Color::Black);
+			std::string enemyhealthstring = std::to_string(enemy_health);
+			enemyhealthtext.setString("ENEMY_HEALTH - " + enemyhealthstring);
+
+			if (enemy_health == 0)
+			{
+				clicked == 7;// GO TO WINNER BACKGROUND
+			}
+
+			if (char_health == 0)
+			{
+				clicked == 8;// GO TO GAME OVER BACKGROUND
+			}
 	
 			window.draw(newbackgroundsprite);
 			window.draw(charactersprite);
@@ -884,6 +977,8 @@ int main()
 			window.draw(charHealthBarFront);
 			window.draw(charpoint);
 			window.draw(ammotext);
+			window.draw(enemyhealthtext);
+			window.draw(charhealthtext);
 
 			for (size_t i = 0; i < enemies.size(); i++) {
 				window.draw(enemies[i]);
@@ -979,6 +1074,56 @@ int main()
 			window.draw(rectangle6);
 			
 		}
+
+		else if (clicked == 7)
+		{
+			
+			window.draw(winnerbackgroundsprite);
+			
+				sf::Text playerscore;
+				playerscore.setFont(font);
+				playerscore.setPosition(400, 200);
+				playerscore.setCharacterSize(50);
+				playerscore.setFillColor(sf::Color::Green);
+				playerscore.setOutlineThickness(2);
+				playerscore.setOutlineColor(sf::Color::Black);
+				playerscore.setString("YOUR SCORE IS - " + to_string(score_show));
+				window.draw(playerscore);
+				window.draw(rectangle5);
+				window.draw(option5);
+
+			if (update == 1) {
+				
+				score_update();
+			}
+
+			reset_game();
+		
+		}
+
+		else if (clicked == 8)
+		{
+			window.draw(gameoverbackgroundsprite);
+			
+			sf::Text playerscore;
+			playerscore.setFont(font);
+			playerscore.setPosition(400, 200);
+			playerscore.setCharacterSize(50);
+			playerscore.setFillColor(sf::Color::Green);
+			playerscore.setOutlineThickness(2);
+			playerscore.setOutlineColor(sf::Color::Black);
+			playerscore.setString("YOUR SCORE IS - " + to_string(score_show));
+			window.draw(playerscore);
+			window.draw(rectangle5);
+			window.draw(option5);
+
+			if (update == 1) {
+
+				score_update();
+				
+			}
+			reset_game();
+		}
 		
 
 		//Char firing
@@ -1003,7 +1148,7 @@ int main()
 						if (k--)
 						{
 							point++;
-							ammo++;
+							score_show++;
 						}
 						else if (!k--)
 						{
@@ -1013,8 +1158,32 @@ int main()
 						break; // Exit the loop after erasing the element
 					}
 				}
+
+				//enemy_main char fire collision
+				if (charFireSpriteVect[i].getGlobalBounds().intersects(enemy2sprite.getGlobalBounds())) {
+					enemy_health--;
+					if (enemy_health == 0)
+					{
+						
+						window.clear();
+						window.draw(winnerbackgroundsprite);
+						window.display();
+						clicked = 7;
+					}
+					charFireSpriteVect.erase(charFireSpriteVect.begin() + i);
+					char_fire.erase(char_fire.begin() + i);
+					//if (enemy_health--)
+						point++;
+						score_show++;
+					//scoring
+
+					
+				}
+
 			}
 		}
+		
+
 		
 		for (size_t i = 0; i < charFireSpriteVect.size(); i++)
 		{
@@ -1039,10 +1208,32 @@ int main()
 					window.draw(rectangle6);
 				}
 
-				enemy_firesprite.setPosition(sf::Vector2f(enemy_fire[j].first + 45, enemy_fire[j].second + 15));
-				enemy_firesprite.move(sf::Vector2f(0, -2));
-				window.draw(enemy_firesprite);
+				enemyFireSpriteVect[j].setPosition(sf::Vector2f(enemy_fire[j].first + 45, enemy_fire[j].second + 15));
+				enemyFireSpriteVect[j].move(sf::Vector2f(0, 2));
+				//enemy_fire character plane collision 
+				if (enemyFireSpriteVect[j].getGlobalBounds().intersects(charactersprite.getGlobalBounds())) {
+					enemyFireSpriteVect.erase(enemyFireSpriteVect.begin() + j);
+					enemy_fire.erase(enemy_fire.begin() + j);
+					char_health--;
+					if (char_health == 0)
+					{
+						
+						window.clear();
+						window.draw(gameoverbackgroundsprite);
+						window.display();
+						clicked = 8;
+						break;
+					}
+					
+				}
+
 			}
+
+			for (size_t i = 0; i < enemyFireSpriteVect.size(); i++)
+			{
+				window.draw(enemyFireSpriteVect[i]);
+			}
+
 		}
 
 
