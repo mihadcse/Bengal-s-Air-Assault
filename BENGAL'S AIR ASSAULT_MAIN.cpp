@@ -315,7 +315,7 @@ int main()
 	sf::Sound backsound;
 	backsound.setBuffer(backsoundbuffer);
 	backsound.setLoop(true);//PLAYING MUSIC IN A LOOP
-	//backsound.play();
+	backsound.play();
 
 
 
@@ -911,6 +911,14 @@ int main()
 				{
 					enemies.erase(enemies.begin() + i);
 					char_health--;
+					if (char_health == 0)
+					{
+						window.clear();
+						window.draw(gameoverbackgroundsprite);
+						window.display();
+						clicked = 8;
+						break;
+					}
 				}
 			}
 		

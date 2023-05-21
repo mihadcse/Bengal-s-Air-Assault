@@ -207,9 +207,9 @@ D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BEN
           [
               T=unsigned int
           ]
-D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(965,13): warning C4553: '==': result of expression not used; did you intend '='?
-D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(970,13): warning C4553: '==': result of expression not used; did you intend '='?
-D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(1140,97): warning C4244: 'argument': conversion from '_Ty2' to 'T', possible loss of data
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(973,13): warning C4553: '==': result of expression not used; did you intend '='?
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(978,13): warning C4553: '==': result of expression not used; did you intend '='?
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(1148,97): warning C4244: 'argument': conversion from '_Ty2' to 'T', possible loss of data
           with
           [
               _Ty2=double
@@ -218,7 +218,7 @@ D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BEN
           [
               T=float
           ]
-D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(1140,71): warning C4244: 'argument': conversion from '_Ty1' to 'T', possible loss of data
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(1148,71): warning C4244: 'argument': conversion from '_Ty1' to 'T', possible loss of data
           with
           [
               _Ty1=double
@@ -227,7 +227,7 @@ D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BEN
           [
               T=float
           ]
-D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(1211,100): warning C4244: 'argument': conversion from '_Ty2' to 'T', possible loss of data
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(1219,100): warning C4244: 'argument': conversion from '_Ty2' to 'T', possible loss of data
           with
           [
               _Ty2=double
@@ -236,7 +236,7 @@ D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BEN
           [
               T=float
           ]
-D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(1211,73): warning C4244: 'argument': conversion from '_Ty1' to 'T', possible loss of data
+D:\IUT SEMESTER 2\CSE 4202\BENGALS AIR ASSAULT\BSA GAME\BENGAL'S AIR ASSAULT\BENGAL'S AIR ASSAULT_MAIN.cpp(1219,73): warning C4244: 'argument': conversion from '_Ty1' to 'T', possible loss of data
           with
           [
               _Ty1=double
